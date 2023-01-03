@@ -26,3 +26,7 @@ SQLC:
 - Automatic code generation
 - Catch SQL query errors before generating codes
 - Full supports Postgres, MySQL is experimental(? check)
+
+## Validation Package
+
+- it might give an error if the given query params value is zero, so make research about this.
