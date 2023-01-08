@@ -11,14 +11,16 @@ import (
 )
 
 func createRandomAccount(t *testing.T) Account {
+	user := createRandomUser(t)
+
 	arg := CreateAccountParams{
-		Owner: utility.RandomOwner(),
-		Balance: utility.RandomMoney(),
+		Owner:    user.Username,
+		Balance:  utility.RandomMoney(),
 		Currency: utility.RandomCurrency(),
 	}
 
 	account, err := testQueries.CreateAccount(context.Background(), arg)
-	
+
 	require.NoError(t, err)
 	require.NotEmpty(t, account)
 	require.Equal(t, arg.Owner, account.Owner)
@@ -31,14 +33,16 @@ func createRandomAccount(t *testing.T) Account {
 }
 
 func TestCreateAccount(t *testing.T) {
+	user := createRandomUser(t)
+
 	arg := CreateAccountParams{
-		Owner: utility.RandomOwner(),
-		Balance: utility.RandomMoney(),
+		Owner:    user.Username,
+		Balance:  utility.RandomMoney(),
 		Currency: utility.RandomCurrency(),
 	}
 
 	account, err := testQueries.CreateAccount(context.Background(), arg)
-	
+
 	require.NoError(t, err)
 	require.NotEmpty(t, account)
 	require.Equal(t, arg.Owner, account.Owner)
@@ -50,9 +54,9 @@ func TestCreateAccount(t *testing.T) {
 
 func TestGetAccount(t *testing.T) {
 	expected := createRandomAccount(t)
-	
+
 	result, err := testQueries.GetAccount(context.Background(), expected.ID)
-	
+
 	require.NoError(t, err)
 	require.NotEmpty(t, result)
 	require.Equal(t, expected.ID, result.ID)
@@ -65,7 +69,7 @@ func TestGetAccount(t *testing.T) {
 func TestUpdateAccount(t *testing.T) {
 	tAccount := createRandomAccount(t)
 	arg := UpdateAccountParams{
-		ID: tAccount.ID,
+		ID:      tAccount.ID,
 		Balance: utility.RandomMoney(),
 	}
 
@@ -82,7 +86,7 @@ func TestUpdateAccount(t *testing.T) {
 
 func TestDeleteAccount(t *testing.T) {
 	tAccount := createRandomAccount(t)
-	
+
 	err := testQueries.DeleteAccount(context.Background(), tAccount.ID)
 
 	require.NoError(t, err)
@@ -97,7 +101,7 @@ func TestListAccounts(t *testing.T) {
 		createRandomAccount(t)
 	}
 	arg := ListAccountsParams{
-		Limit: 5,
+		Limit:  5,
 		Offset: 5,
 	}
 
@@ -108,5 +112,5 @@ func TestListAccounts(t *testing.T) {
 	require.Len(t, result, 5)
 	for _, account := range result {
 		require.NotEmpty(t, account)
-	}	
+	}
 }
