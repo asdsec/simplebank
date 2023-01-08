@@ -1,5 +1,5 @@
 package db
- 
+
 import (
 	"context"
 	"testing"
@@ -10,9 +10,12 @@ import (
 )
 
 func createRandomUser(t *testing.T) User {
+	hashedPassword, err := utility.HashPassword(utility.RandomString(6))
+	require.NoError(t, err)
+
 	arg := CreateUserParams{
 		Username:       utility.RandomOwner(),
-		HashedPassword: "secret",
+		HashedPassword: hashedPassword,
 		FullName:       utility.RandomOwner(),
 		Email:          utility.RandomEmail(),
 	}
@@ -32,9 +35,12 @@ func createRandomUser(t *testing.T) User {
 }
 
 func TestCreateUser(t *testing.T) {
+	hashedPassword, err := utility.HashPassword(utility.RandomString(6))
+	require.NoError(t, err)
+
 	arg := CreateUserParams{
 		Username:       utility.RandomOwner(),
-		HashedPassword: "secret",
+		HashedPassword: hashedPassword,
 		FullName:       utility.RandomOwner(),
 		Email:          utility.RandomEmail(),
 	}
