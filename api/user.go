@@ -99,7 +99,7 @@ func (server *Server) loginUser(ctx *gin.Context) {
 		}
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
-	}
+	} 
 
 	err = utility.CheckPassword(req.Password, user.HashedPassword)
 	if err != nil {
