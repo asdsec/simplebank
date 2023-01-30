@@ -116,6 +116,9 @@ func (server *Server) deleteAccount(ctx *gin.Context) {
 		return
 	}
 
+	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
+	server.validAccount(ctx, req.ID, authPayload.Username)
+
 	err := server.store.DeleteAccount(ctx, req.ID)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -157,4 +160,23 @@ func (server *Server) updateAccount(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, account)
+}
+
+func (server *Server) validAccount(ctx *gin.Context, accountID int64, username string) {
+	account, err := server.store.GetAccount(ctx, accountID)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			ctx.JSON(http.StatusNotFound, errorResponse(err))
+			return
+		}
+
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	if account.Owner != username {
+		err := errors.New("from account does not belong to the authenticated user")
+		ctx.JSON(http.StatusUnauthorized, errorResponse(err))
+		return
+	}
 }

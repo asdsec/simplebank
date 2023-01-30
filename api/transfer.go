@@ -25,7 +25,7 @@ func (server *Server) createTransfer(ctx *gin.Context) {
 		return
 	}
 
-	fromAccount, valid := server.validAccount(ctx, req.FromAccountID, req.Currency)
+	fromAccount, valid := server.validAccountCurrency(ctx, req.FromAccountID, req.Currency)
 	if !valid {
 		return
 	}
@@ -37,7 +37,7 @@ func (server *Server) createTransfer(ctx *gin.Context) {
 		return
 	}
 
-	_, valid = server.validAccount(ctx, req.ToAccountID, req.Currency)
+	_, valid = server.validAccountCurrency(ctx, req.ToAccountID, req.Currency)
 	if !valid {
 		return
 	}
@@ -57,7 +57,7 @@ func (server *Server) createTransfer(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, result)
 }
 
-func (server *Server) validAccount(ctx *gin.Context, accountID int64, currency string) (db.Account, bool) {
+func (server *Server) validAccountCurrency(ctx *gin.Context, accountID int64, currency string) (db.Account, bool) {
 	account, err := server.store.GetAccount(ctx, accountID)
 	if err != nil {
 		if err == sql.ErrNoRows {
