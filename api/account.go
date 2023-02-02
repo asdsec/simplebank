@@ -144,6 +144,9 @@ func (server *Server) updateAccount(ctx *gin.Context) {
 		return
 	}
 
+	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
+	server.validAccount(ctx, req.ID, authPayload.Username)
+
 	arg := db.UpdateAccountParams{
 		ID:      req.ID,
 		Balance: req.Balance,
@@ -155,6 +158,7 @@ func (server *Server) updateAccount(ctx *gin.Context) {
 			ctx.JSON(http.StatusNotFound, errorResponse(err))
 			return
 		}
+
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
 	}
