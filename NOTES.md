@@ -30,3 +30,7 @@ SQLC:
 ## Validation Package
 
 - it might give an error if the given query params value is zero, so make research about this.
+
+- docker run --name simplebank --network bank-network -p 8080:8080 -e GIN_MODE=release -e DB_SOURCE="postgresql://root:secret@postgres15:5432/simple_bank?sslmode=disable" simplebank:latest
+
+- docker network connect bank-network postgres15
