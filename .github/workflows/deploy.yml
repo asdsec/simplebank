@@ -4,6 +4,11 @@ on:
   push:
     branches: ['master']
 
+# need for oidc
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   build:
     name: Build image
@@ -15,10 +20,10 @@ jobs:
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1 # More information on this action can be found below in the 'AWS Credentials' section
-        with: 
-          # todo(sametdmr): use the role instead of access key
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        with:
+          role-to-assume: arn:aws:iam::734422052075:role/OIDC-aws-ecr
+          # not need
+          role-session-name: ECRDeployment
           aws-region: us-west-2
 
       - name: Login to Amazon ECR
